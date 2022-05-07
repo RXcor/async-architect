@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: my-rabbit
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./definitions.json:/etc/rabbitmq/definitions.json
+      - ./logs:/var/log/rabbitmq/log
+      - ./definitions_after_run.json:/etc/rabbitmq/definitions_after_run.json
+      - ./configure_and_sart_server.sh:/etc/configure_and_sart_server.sh
+
+      # - /home/vitalij/projects/tls-gen/basic/result/ca_certificate.pem:/tmp/ca_certificate.pem
+      # - /home/vitalij/projects/tls-gen/basic/result/server_certificate.pem:/tmp/server_certificate.pem
+      # - /home/vitalij/projects/tls-gen/basic/result/server_key.pem:/tmp/server_key.pem
+    ports:
+      - 5672:5672
+      - 15672:15672
+      # - 5671:5671
+    command: >
+      /bin/bash -c "chmod 777 /etc/configure_and_sart_server.sh && sh /etc/configure_and_sart_server.sh"
+
+    #- ./rabbitmq/data:/var/lib/rabbitmq/mnesia/rabbit@my-rabbit
+    #- ./rabbitmq/logs:/var/log/rabbitmq/log
+    #- ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json

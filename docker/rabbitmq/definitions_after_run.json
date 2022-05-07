@@ -1,0 +1,56 @@
+{
+  "queues": [
+    {
+      "vhost": "/",
+      "name": "accounts",
+      "durable": false,
+      "auto_delete": false,
+      "arguments": {
+      }
+    },
+    {
+      "vhost": "/",
+      "name": "accounts-stream",
+      "durable": false,
+      "auto_delete": false,
+      "arguments": {
+      }
+    }
+  ],
+  "exchanges": [
+    {
+      "vhost": "/",
+  		"name": "accounts",
+  		"type": "fanout",
+  		"durable": false,
+  		"auto_delete": false,
+  		"internal": false,
+  		"arguments": {}
+	  },
+    {
+      "vhost": "/",
+  		"name": "accounts-stream",
+  		"type": "fanout",
+  		"durable": false,
+  		"auto_delete": false,
+  		"internal": false,
+  		"arguments": {}
+	  }
+  ],
+  "bindings": [
+     {
+       "vhost": "/",
+       "source": "accounts",
+       "destination_type": "queue",
+       "destination": "accounts",
+       "arguments": {}
+     },
+     {
+       "vhost": "/",
+       "source": "accounts-stream",
+       "destination_type": "queue",
+       "destination": "accounts-stream",
+       "arguments": {}
+     }
+   ]
+}
