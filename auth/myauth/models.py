@@ -37,11 +37,9 @@ class MyUser(AbstractUser):
         # new account
         if not self.id:
             # produce CUD event
-            event_info = {
+            event = {
                 'event_name': 'AccountCreated',
                 'event_type': 'CUD',
-            }
-            event = {
                 'data': {
                     'public_id': str(self.public_id),
                     'username': str(self.username),
@@ -51,15 +49,13 @@ class MyUser(AbstractUser):
                 }
             }
             topic = 'accounts-stream'
-            publish(event_info, event, topic)
+            publish(event, topic)
             # produce CUD event END
         else:
             # produce CUD event
-            event_info = {
+            event = {
                 'event_name': 'AccountUpdated',
                 'event_type': 'CUD',
-            }
-            event = {
                 'data': {
                     'public_id': str(self.public_id),
                     'username': str(self.username),
@@ -69,17 +65,14 @@ class MyUser(AbstractUser):
                 }
             }
             topic = 'accounts-stream'
-            publish(event_info, event, topic)
+            publish(event, topic)
             # produce CUD event END
         super(MyUser, self).save(*args, **kwargs)
         if self.role != self.__original_role:
             # produce Business event
-            event_info = {
+            event = {
                 'event_name': 'AccountRoleChanged',
                 'event_type': 'business',
-            }
-            event = {
-                
                 'data': {
                     'public_id': str(self.public_id),
                     'new_role': self.role,
@@ -87,21 +80,19 @@ class MyUser(AbstractUser):
                 }
             }
             topic = 'accounts'
-            publish(event_info, event, topic)
+            publish(event, topic)
             # produce Business event END
 
     def delete(self, *args, **kwargs):
         super(MyUser, self).delete(*args, **kwargs)
         # produce CUD event
-        event_info = {
+        event = {
             'event_name': 'AccountDeleted',
             'event_type': 'CUD',
-        }
-        event = {
             'data': {
                 'public_id': str(self.public_id)
             }
         }
         topic = 'accounts-stream'
-        publish(event_info, event, topic)
+        publish(event, topic)
         # produce CUD event END
